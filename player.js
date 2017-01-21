@@ -110,7 +110,7 @@ Player.prototype.hit = function() {
 }
 
 Player.prototype.addOrbiter = function() {
-  if (this.orbiters.length <= this.max_orbiters) {
+  if (this.orbiters.length < this.max_orbiters) {
     var new_orbiter = new Orbiter(this);
     new_orbiter.theta = Math.random() * 2 * Math.PI;
     new_orbiter.speed = Math.PI / 180 + Math.random() * Math.PI / 30;

@@ -61,6 +61,12 @@ var modMinFreq = 0;
 var modMaxDepth = -50;
 var modMinDepth = -150;
 
+function preload() {
+  player_explosion = loadSound('assets/player_explosion.wav');
+  player_hit = loadSound('assets/player_hit.wav');
+  enemy_explosion = loadSound('assets/enemy_explosion.wav');
+}
+
 function setup() {
   var cnv = createCanvas(SCREEN_WIDTH, SCREEN_HEIGHT);
   player.setup();
@@ -148,9 +154,15 @@ function draw() {
         powerups.push(new Powerup({x: enemies[i].x, y: enemies[i].y}));
       }     
       enemies.splice(i, 1);
+      enemy_explosion.setVolume(0.2);
+      enemy_explosion.play();
     } else if (collides(enemies[i], player)) {
+      player_hit.setVolume(0.3);
+      player_hit.play();
       player.hit();
       enemies.splice(i, 1);
+      enemy_explosion.setVolume(0.2);
+      enemy_explosion.play();
     } else {
       if (Math.random() * 200 < enemies[i].fire_rate) {
         enemies[i].shoot(enemy_projectiles);
@@ -166,6 +178,8 @@ function draw() {
     if (proj.x > SCREEN_WIDTH || proj.x < 0 || proj.y > SCREEN_HEIGHT || proj.y < 0) {
       enemy_projectiles.splice(i, 1);
     } else if (collides(proj, player)) {
+      player_hit.setVolume(0.3);
+      player_hit.play();
       player.hit(); 
       enemy_projectiles.splice(i, 1);
     } else {
@@ -175,6 +189,8 @@ function draw() {
   }
 
   if (!player.alive && !game_over) {
+    player_explosion.setVolume(0.5);
+    player_explosion.play();
     game_over = true;
     setTimeout(reset, 3000);
   }
