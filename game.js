@@ -15,6 +15,7 @@ var wave = 0;
 var enemies_remaining = 0;
 var display_wave = false;
 var powerups = [];
+var game_over = false;
 
 function distance(x1, y1, x2, y2) {
   var dx = x2 - x1;
@@ -30,6 +31,18 @@ function collides(obj1, obj2) {
 function startWave() {
   enemies_remaining = wave * 10;
   display_wave = false;
+}
+
+function reset() {
+  player = new Player();
+  player.setup();
+  wave = 0;
+  enemies_remaining = 0;
+  enemies = [];
+  enemy_projectiles = [];
+  powerups = [];
+  display_wave = false;
+  game_over = false;
 }
 
 function setup() {
@@ -48,7 +61,13 @@ function draw() {
     setTimeout(startWave, 2000);
   }
 
-  if (display_wave) {
+  if (game_over) {
+    stroke(180, 0, 0);
+    noFill();
+    textSize(64);
+    textAlign(CENTER);
+    text("YOU DEAD", SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2); 
+  } else if (display_wave) {
     stroke(180);
     noFill();
     textSize(64);
@@ -69,7 +88,35 @@ function draw() {
         powerups.push(new Powerup({x: enemies[i].x, y: enemies[i].y}));
       }     
       enemies.splice(i, 1);
+    } else if (collides(enemies[i], player)) {
+      player.hit();
+      enemies.splice(i, 1);
+    } else {
+      if (Math.random() * 100 < enemies[i].fire_rate) {
+        enemies[i].shoot(enemy_projectiles);
+      }
     }
+  }
+
+  for (var i=enemy_projectiles.length-1; i>=0; --i) {
+    proj = enemy_projectiles[i];
+    noStroke();
+    fill(55 + Math.random() * 200, 0, 0);
+    ellipse(proj.x, proj.y, proj.size);
+    if (proj.x > SCREEN_WIDTH || proj.x < 0 || proj.y > SCREEN_HEIGHT || proj.y < 0) {
+      enemy_projectiles.splice(i, 1);
+    } else if (collides(proj, player)) {
+      player.hit(); 
+      enemy_projectiles.splice(i, 1);
+    } else {
+      enemy_projectiles[i].x += proj.x_speed;
+      enemy_projectiles[i].y += proj.y_speed;
+    }
+  }
+
+  if (!player.alive && !game_over) {
+    game_over = true;
+    setTimeout(reset, 3000);
   }
 
   for (var i=powerups.length-1; i>=0; --i){
@@ -84,9 +131,10 @@ function draw() {
     }
   }
 
-  player.update();
-  player.draw();
- 
+  if (!game_over) {
+    player.update();
+    player.draw();
+  }
   
   for (var i = player.projectiles.length - 1; i >= 0; --i) {
     proj = player.projectiles[i];

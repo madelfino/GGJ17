@@ -54,7 +54,35 @@ Enemy.prototype.draw = function() {
 };
 
 Enemy.prototype.shoot = function(projectiles) {
-
+  var tracking = true;
+  var vx, vy, theta;
+  if (tracking) {
+    var dx = player.x - this.x;
+    var dy = player.y - this.y;
+    if (dx == 0) {
+      if (dy > 0) {
+        theta = Math.PI / 2;
+      } else {
+        theta = 3 * Math.PI / 2;
+      }
+    } else {
+      theta = Math.atan(dy/dx);
+      if (this.x > player.x) {
+        theta += Math.PI;
+      }
+    }
+  } else {
+    theta = Math.random() * 2 * Math.PI;  
+  }
+  vx = 7 * Math.cos(theta);
+  vy = 7 * Math.sin(theta);
+  projectiles.push({
+    x: this.x,
+    y: this.y,
+    x_speed: vx,
+    y_speed: vy,
+    size: 3
+  });
 };
 
 Enemy.prototype.hit = function() {

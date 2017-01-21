@@ -10,6 +10,7 @@ function Player() {
   this.score = 0;
   this.pickupradius = 50;
   this.max_orbiters = 10;
+  this.alive = true;
 }
 
 Player.prototype.setup = function() {
@@ -67,7 +68,7 @@ Player.prototype.update = function() {
       y: Y,
       x_speed: 5 * Math.cos(theta),
       y_speed: 5 * Math.sin(theta),
-      color: '#ff0000'
+      size: 1
     });
     for (var i = 0; i < player.orbiters.length; ++i) {
       player.orbiters[i].shoot(player.projectiles);
@@ -93,6 +94,14 @@ Player.prototype.draw = function() {
   textAlign(LEFT);
   textSize(24);
   text("Score: " + this.score, 25, 25);
+}
+
+Player.prototype.hit = function() {
+  if (this.orbiters.length > 0) {
+    this.orbiters.splice(Math.floor(Math.random() * this.orbiters.length), 1);
+  } else {
+    this.alive = false;
+  }
 }
 
 Player.prototype.addOrbiter = function() {
