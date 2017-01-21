@@ -5,6 +5,8 @@ function Enemy(type) {
   this.color = 'red';
   this.fire_rate = 10;
   this.speed = 3;
+  this.max_hp = 10;
+  this.hp = this.max_hp;
   this.direction = Math.floor(Math.random() * 4);
   if (this.direction == 0) {
     this.x = - this.size - 1;
@@ -41,6 +43,14 @@ Enemy.prototype.draw = function() {
   noStroke();
   fill(this.color);
   ellipse(this.x, this.y, this.size);
+  if (this.hp == this.max_hp) {
+    fill('green');
+  } else if (this.hp / this.max_hp > .5) {
+    fill('yellow');
+  } else {
+    fill('red');
+  }
+  rect(this.x - this.size / 2, this.y - this.size / 2 - 5, (this.hp / this.max_hp) * this.size, 3);
 };
 
 Enemy.prototype.shoot = function(projectiles) {
@@ -48,5 +58,8 @@ Enemy.prototype.shoot = function(projectiles) {
 };
 
 Enemy.prototype.hit = function() {
-  this.alive = false;
+  this.hp--;
+  if (this.hp <= 0) {
+    this.alive = false;
+  }
 }

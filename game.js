@@ -14,6 +14,7 @@ var max_enemies = 100;
 var wave = 0;
 var enemies_remaining = 0;
 var display_wave = false;
+var powerups = [];
 
 function distance(x1, y1, x2, y2) {
   var dx = x2 - x1;
@@ -27,7 +28,6 @@ function collides(obj1, obj2) {
 }
 
 function startWave() {
-  wave++;
   enemies_remaining = wave * 10;
   display_wave = false;
 }
@@ -43,6 +43,7 @@ function draw() {
   background(40, 40, 200);
 
   if (enemies_remaining <= 0 && enemies.length == 0 && !display_wave) {
+    wave++;
     display_wave = true;
     setTimeout(startWave, 2000);
   }
