@@ -1,3 +1,10 @@
+/*
+Created by Michael Delfino for Global Game Jam 2017
+Libraries: p5.js and p5.sound.js
+Sound effects made in Bfxr
+Background music made in Soundation Studio
+*/
+
 const SCREEN_WIDTH = 1200;
 const SCREEN_HEIGHT = 900;
 
@@ -65,6 +72,7 @@ function preload() {
   player_explosion = loadSound('assets/player_explosion.wav');
   player_hit = loadSound('assets/player_hit.wav');
   enemy_explosion = loadSound('assets/enemy_explosion.wav');
+  bg_music = loadSound('assets/bg_music.wav');
 }
 
 function setup() {
@@ -89,6 +97,8 @@ function setup() {
 
   // fade carrier in/out on mouseover / touch start
   toggleAudio(cnv);
+
+  bg_music.loop();
 }
 
 function draw() {
