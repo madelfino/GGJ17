@@ -16,6 +16,7 @@ var enemies_remaining = 0;
 var display_wave = false;
 var powerups = [];
 var game_over = false;
+var timer = 0;
 
 function distance(x1, y1, x2, y2) {
   var dx = x2 - x1;
@@ -43,6 +44,7 @@ function reset() {
   powerups = [];
   display_wave = false;
   game_over = false;
+  timer = 0;
 }
 
 function setup() {
@@ -52,8 +54,8 @@ function setup() {
 
 function draw() {
  
-  //draw blue background
-  background(40, 40, 200);
+  timer++;
+  background(100 + 55 * Math.sin(timer * Math.PI / 90));
 
   if (enemies_remaining <= 0 && enemies.length == 0 && !display_wave) {
     wave++;

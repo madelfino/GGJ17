@@ -2,10 +2,9 @@ function Enemy(type) {
   this.type = type;
   this.alive = true;
   this.size = 15;
-  this.color = 'red';
-  this.fire_rate = 10;
+  this.fire_rate = 2;
   this.speed = 3;
-  this.max_hp = 4;
+  this.max_hp = 2;
   this.hp = this.max_hp;
   this.direction = Math.floor(Math.random() * 4);
   if (this.direction == 0) {
@@ -41,7 +40,7 @@ Enemy.prototype.update = function() {
 
 Enemy.prototype.draw = function() {
   noStroke();
-  fill(this.color);
+  fill(155 - 55 * Math.sin(timer * Math.PI/90), 0, 0);
   ellipse(this.x, this.y, this.size);
   if (this.hp == this.max_hp) {
     fill('green');
@@ -50,7 +49,7 @@ Enemy.prototype.draw = function() {
   } else {
     fill('red');
   }
-  rect(this.x - this.size / 2, this.y - this.size / 2 - 5, (this.hp / this.max_hp) * this.size, 3);
+  //rect(this.x - this.size / 2, this.y - this.size / 2 - 5, (this.hp / this.max_hp) * this.size, 3);
 };
 
 Enemy.prototype.shoot = function(projectiles) {
@@ -74,14 +73,14 @@ Enemy.prototype.shoot = function(projectiles) {
   } else {
     theta = Math.random() * 2 * Math.PI;  
   }
-  vx = 7 * Math.cos(theta);
-  vy = 7 * Math.sin(theta);
+  vx = 5 * Math.cos(theta);
+  vy = 5 * Math.sin(theta);
   projectiles.push({
     x: this.x,
     y: this.y,
     x_speed: vx,
     y_speed: vy,
-    size: 3
+    size: 7
   });
 };
 

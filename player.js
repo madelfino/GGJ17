@@ -6,7 +6,7 @@ function Player() {
   this.cooldown = 0;
   this.projectiles = [];
   this.orbiters = [];
-  this.size = 5;
+  this.size = 2;
   this.score = 0;
   this.pickupradius = 50;
   this.max_orbiters = 10;
@@ -86,6 +86,11 @@ Player.prototype.draw = function() {
   noStroke();
   fill(0, 255, 0);
   ellipse(player.x, player.y, player.size);
+
+  noFill();
+  strokeWeight(1);
+  stroke(0, 100 + 55 * Math.sin(timer * Math.PI / 90), 0);
+  ellipse(player.x, player.y, player.pickupradius);
   
   for (var i=0; i<this.orbiters.length; ++i) {
     this.orbiters[i].draw();

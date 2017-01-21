@@ -3,7 +3,7 @@ function Powerup(info) {
   this.y = info.y;
   this.size = 20;
   this.alive = true;
-  this.ttl = 100;
+  this.ttl = 300;
 }
 
 Powerup.prototype.update = function() {
