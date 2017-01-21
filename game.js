@@ -6,21 +6,10 @@ const A_KEY = 65;
 const S_KEY = 83;
 const D_KEY = 68;
 
-var player = {
-  x: 600,
-  y: 800,
-  speed: 3,
-  reload_time: 1,
-  cooldown: 0,
-  projectiles: [],
-  orbiters: [],
-  size: 5
-};
-
+var player = new Player();
 var enemies = [];
 var enemy_projectiles = [];
 var spawn_chance = 5;
-var num_orbiters = 2;
 
 function distance(x1, y1, x2, y2) {
   var dx = x2 - x1;
@@ -35,11 +24,7 @@ function collides(obj1, obj2) {
 
 function setup() {
   createCanvas(SCREEN_WIDTH, SCREEN_HEIGHT);
-  for (var i=0; i<num_orbiters; ++i) {
-    player.orbiters.push(new Orbiter(player));
-    player.orbiters[i].theta = Math.random() * 2 * Math.PI;
-    player.orbiters[i].speed = Math.PI / 180 + Math.random() * Math.PI / 30;
-  }
+  player.setup();
 }
 
 function draw() {
@@ -47,7 +32,7 @@ function draw() {
   //draw blue background
   background(40, 40, 200);
 
-  if (Math.random() * 100 < spawn_chance) {
+  if (Math.random() * 100 < spawn_chance && enemies.length < 100) {
     enemies.push(new Enemy('standard'));
   }
 
@@ -58,74 +43,14 @@ function draw() {
       enemies.splice(i, 1);
     }
   }
-  
-  //draw the player
-  noStroke();
-  fill(0, 255, 0);
-  ellipse(player.x, player.y, player.size);
 
-  fill('green');
-  for (var i=0; i<player.orbiters.length; ++i) {
-    player.orbiters[i].update();
-    player.orbiters[i].draw();
-  }
+  player.update();
+  player.draw();
  
-  //update player position based on keyboard input
-  if (keyIsDown(W_KEY)) {
-    player.y -= player.speed;
-  }
-  
-  if (keyIsDown(S_KEY)) {
-    player.y += player.speed;
-  }
-  
-  if (keyIsDown(D_KEY)) {
-    player.x += player.speed;
-  }
-  
-  if (keyIsDown(A_KEY)) {
-    player.x -= player.speed;
-  }
-  
-  if (player.cooldown > 0) {
-    player.cooldown--;
-  }
-  
-  if (mouseIsPressed && player.cooldown <= 0) {
-    var X = player.x;
-    var Y = player.y;
-    var dx = mouseX - X;
-    var dy = mouseY - Y;
-    var theta;
-    if (dx == 0) {
-      if (dy > 0) {
-        theta = Math.PI / 2;
-      } else {
-        theta = 3 * Math.PI / 2;
-      }
-    } else {
-      theta = Math.atan(dy/dx);
-      if (X > mouseX) {
-        theta += Math.PI;
-      }
-    }
-    player.cooldown = player.reload_time;
-    /*player.projectiles.push({
-      x: X,
-      y: Y,
-      x_speed: 5 * Math.cos(theta),
-      y_speed: 5 * Math.sin(theta),
-      color: '#ff0000'
-    });*/
-    for (var i = 0; i < player.orbiters.length; ++i) {
-      player.orbiters[i].shoot(player.projectiles);
-    }
-  }
   
   for (var i = player.projectiles.length - 1; i >= 0; --i) {
     proj = player.projectiles[i];
     fill(Math.random()*255, Math.random()*255, Math.random()*255);
-    //fill(player.projectiles[i].color);
     noStroke();
     ellipse(proj.x, proj.y, proj.size);
     player.projectiles[i].x += proj.x_speed;
@@ -142,9 +67,10 @@ function draw() {
   }
   
   //draw cursor
-  stroke(255, 0, 0);
+  stroke(180);
+  strokeWeight(2);
   noFill();
   ellipse(mouseX, mouseY, 10);
-  ellipse(mouseX, mouseY, 1);
-  
+  line(mouseX, mouseY - 8, mouseX, mouseY + 8);
+  line(mouseX - 8, mouseY, mouseX + 8, mouseY);
 }
