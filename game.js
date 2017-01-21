@@ -77,7 +77,7 @@ function draw() {
     powerups[i].draw();
     if (collides(powerups[i], {x: player.x, y: player.y, size: player.size + player.pickupradius})) {
       powerups[i].alive = false;
-      player.orbiters.push(new Orbiter(player));
+      player.addOrbiter();
     }
     if (!powerups[i].alive) {
       powerups.splice(i, 1);
