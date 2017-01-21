@@ -9,7 +9,7 @@ function Player() {
   this.size = 2;
   this.score = 0;
   this.pickupradius = 50;
-  this.max_orbiters = 10;
+  this.max_orbiters = 6;
   this.alive = true;
 }
 

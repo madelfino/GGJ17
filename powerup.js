@@ -4,12 +4,25 @@ function Powerup(info) {
   this.size = 20;
   this.alive = true;
   this.ttl = 300;
+  this.speed = 0.5;
 }
 
 Powerup.prototype.update = function() {
   this.ttl--;
   if (this.ttl <= 0) {
     this.alive = false;
+  }
+  if (this.x < player.x) {
+    this.x += this.speed;
+  }
+  if (this.x > player.x) {
+    this.x -= this.speed;
+  }
+  if (this.y < player.x) {
+    this.y += this.speed;
+  }
+  if (this.y > player.y) {
+    this.y -= this.speed;
   }
 }
 
