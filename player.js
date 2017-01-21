@@ -45,11 +45,22 @@ Player.prototype.update = function() {
   }
 
   if (mouseIsPressed && this.cooldown <= 0) {
-    var X = this.x;
-    var Y = this.y;
-    var dx = mouseX - X;
-    var dy = mouseY - Y;
-    var theta;
+    this.shoot();
+  }
+
+ 
+  for (var i=0; i<this.orbiters.length; ++i) {
+    this.orbiters[i].update();
+  }
+}
+
+Player.prototype.shoot = function(angle) {
+  var X = this.x;
+  var Y = this.y;
+  var dx = mouseX - X;
+  var dy = mouseY - Y;
+  var theta;
+  if (angle === undefined) {
     if (dx == 0) {
       if (dy > 0) {
         theta = Math.PI / 2;
@@ -62,24 +73,23 @@ Player.prototype.update = function() {
         theta += Math.PI;
       }
     }
-    this.cooldown = player.reload_time;
-    if (this.orbiters.length == 0) {
-      this.projectiles.push({
-        x: X,
-        y: Y,
-        x_speed: 5 * Math.cos(theta),
-        y_speed: 5 * Math.sin(theta),
-        size: 2
-      });
-    }
-    for (var i = 0; i < player.orbiters.length; ++i) {
-      player.orbiters[i].shoot(player.projectiles);
-    }
+  } else {
+    theta = angle;
   }
-
- 
-  for (var i=0; i<this.orbiters.length; ++i) {
-    this.orbiters[i].update();
+  this.cooldown = player.reload_time;
+  if (this.orbiters.length == 0) {
+    var s = 2;
+    if (!this.alive) s = 7;
+    this.projectiles.push({
+      x: X,
+      y: Y,
+      x_speed: 5 * Math.cos(theta),
+      y_speed: 5 * Math.sin(theta),
+      size: s
+    });
+  }
+  for (var i = 0; i < player.orbiters.length; ++i) {
+    player.orbiters[i].shoot(player.projectiles);
   }
 }
 
@@ -103,11 +113,21 @@ Player.prototype.draw = function() {
   text("Score: " + this.score, 25, 25);
 }
 
+Player.prototype.radialShoot = function(num_bullets) {
+  for (var theta = 0; theta <= Math.PI * 2; theta += Math.PI * 2 / num_bullets) {
+    this.shoot(theta);
+  }
+}
+
 Player.prototype.hit = function() {
   if (this.orbiters.length > 0) {
     this.orbiters.splice(Math.floor(Math.random() * this.orbiters.length), 1);
   } else {
-    this.alive = false;
+    if (this.alive) {
+      this.alive = false;
+      this.radialShoot(72);
+      this.radialShoot(72);
+    }
   }
 }
 
