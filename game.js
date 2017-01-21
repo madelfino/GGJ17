@@ -10,6 +10,10 @@ var player = new Player();
 var enemies = [];
 var enemy_projectiles = [];
 var spawn_chance = 5;
+var max_enemies = 100;
+var wave = 0;
+var enemies_remaining = 0;
+var display_wave = false;
 
 function distance(x1, y1, x2, y2) {
   var dx = x2 - x1;
@@ -22,6 +26,12 @@ function collides(obj1, obj2) {
   return (obj1.size / 2 + obj2.size / 2 > d);
 }
 
+function startWave() {
+  wave++;
+  enemies_remaining = wave * 10;
+  display_wave = false;
+}
+
 function setup() {
   createCanvas(SCREEN_WIDTH, SCREEN_HEIGHT);
   player.setup();
@@ -32,8 +42,22 @@ function draw() {
   //draw blue background
   background(40, 40, 200);
 
-  if (Math.random() * 100 < spawn_chance && enemies.length < 100) {
+  if (enemies_remaining <= 0 && enemies.length == 0 && !display_wave) {
+    display_wave = true;
+    setTimeout(startWave, 2000);
+  }
+
+  if (display_wave) {
+    stroke(180);
+    noFill();
+    textSize(64);
+    textAlign(CENTER);
+    text("WAVE " + wave, SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2);
+  }
+
+  if (Math.random() * 100 < spawn_chance && enemies.length < max_enemies && enemies_remaining > 0) {
     enemies.push(new Enemy('standard'));
+    enemies_remaining--;
   }
 
   for (var i=enemies.length-1; i>=0; --i) {
@@ -62,6 +86,7 @@ function draw() {
       if (collides(proj, enemies[j])) {
         enemies[j].hit();
         player.projectiles.splice(i, 1);
+        player.score++;
       }
     }
   }
