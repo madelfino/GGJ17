@@ -24,6 +24,7 @@ var display_wave = false;
 var powerups = [];
 var game_over = false;
 var timer = 0;
+var show_instructions = true;
 
 function distance(x1, y1, x2, y2) {
   var dx = x2 - x1;
@@ -128,6 +129,19 @@ function draw() {
     vertex(x, y + 40);
   }
   endShape();
+
+  if (show_instructions) {
+    stroke(180);
+    fill(180, 0, 0);
+    textSize(32);
+    textAlign(CENTER);
+    strokeWeight(2);
+    text("WASD Keys to Move\nMouse to Aim/Shoot", SCREEN_WIDTH / 2, SCREEN_HEIGHT / 4);  
+  }
+  if (timer > 500) {
+      show_instructions = false;
+  }
+
 
   if (enemies_remaining <= 0 && enemies.length == 0 && !display_wave) {
     wave++;
