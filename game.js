@@ -122,7 +122,7 @@ function draw() {
   if (enemies_remaining <= 0 && enemies.length == 0 && !display_wave) {
     wave++;
     display_wave = true;
-    setTimeout(startWave, 2000);
+    setTimeout(startWave, 3000);
   }
 
   if (game_over) {

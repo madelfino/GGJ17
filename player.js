@@ -63,13 +63,15 @@ Player.prototype.update = function() {
       }
     }
     this.cooldown = player.reload_time;
-    this.projectiles.push({
-      x: X,
-      y: Y,
-      x_speed: 5 * Math.cos(theta),
-      y_speed: 5 * Math.sin(theta),
-      size: 1
-    });
+    if (this.orbiters.length == 0) {
+      this.projectiles.push({
+        x: X,
+        y: Y,
+        x_speed: 5 * Math.cos(theta),
+        y_speed: 5 * Math.sin(theta),
+        size: 2
+      });
+    }
     for (var i = 0; i < player.orbiters.length; ++i) {
       player.orbiters[i].shoot(player.projectiles);
     }
@@ -89,7 +91,7 @@ Player.prototype.draw = function() {
 
   noFill();
   strokeWeight(1);
-  stroke(0, 100 + 55 * Math.sin(timer * Math.PI / 90), 0);
+  stroke(155 - 55 * Math.sin(timer * Math.PI / 90), 155, 155 - 55 * Math.sin(timer * Math.PI / 90));
   ellipse(player.x, player.y, player.pickupradius);
   
   for (var i=0; i<this.orbiters.length; ++i) {
