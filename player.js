@@ -8,6 +8,7 @@ function Player() {
   this.orbiters = [];
   this.size = 5;
   this.score = 0;
+  this.pickupradius = 20;
 }
 
 Player.prototype.setup = function() {

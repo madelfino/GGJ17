@@ -65,7 +65,22 @@ function draw() {
     enemies[i].update();
     enemies[i].draw();
     if (!enemies[i].alive) {
+      if (Math.random() * 100 < spawn_chance || enemies.length == 1 && enemies_remaining == 0) {
+        powerups.push(new Powerup({x: enemies[i].x, y: enemies[i].y}));
+      }     
       enemies.splice(i, 1);
+    }
+  }
+
+  for (var i=powerups.length-1; i>=0; --i){
+    powerups[i].update();
+    powerups[i].draw();
+    if (collides(powerups[i], {x: player.x, y: player.y, size: player.size + player.pickupradius})) {
+      powerups[i].alive = false;
+      player.orbiters.push(new Orbiter(player));
+    }
+    if (!powerups[i].alive) {
+      powerups.splice(i, 1);
     }
   }
 

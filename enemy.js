@@ -5,7 +5,7 @@ function Enemy(type) {
   this.color = 'red';
   this.fire_rate = 10;
   this.speed = 3;
-  this.max_hp = 10;
+  this.max_hp = 4;
   this.hp = this.max_hp;
   this.direction = Math.floor(Math.random() * 4);
   if (this.direction == 0) {
