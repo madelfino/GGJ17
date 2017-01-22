@@ -8,7 +8,7 @@ function Orbiter(controller) {
   this.y = controller.y + this.r;
   this.size = 20;
   this.alive = true;
-  this.hp = 20;
+  this.hp = 50;
 }
 
 Orbiter.prototype.update = function() {

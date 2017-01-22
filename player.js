@@ -99,7 +99,7 @@ Player.prototype.draw = function() {
   noStroke();
   if (this.active_powerup == 'shield' && this.powerup_cooldown > 0) {
     fill(0, 0, 150, 100);
-    ellipse(this.x, this.y, this.pickupradius * 2);
+    ellipse(this.x, this.y, this.pickupradius + this.pickupradius * 2 * (this.powerup_cooldown / 600));
   }
 
   fill(0, 255, 0);
@@ -191,7 +191,7 @@ Player.prototype.powerup = function(type) {
         this.orbiters[i].theta = (2*Math.PI/this.orbiters.length) * i;
       } 
     } else if (type == 'shield') {
-      this.powerup_cooldown = 1000;
+      this.powerup_cooldown = 600;
     }
   }
 }
