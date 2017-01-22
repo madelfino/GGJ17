@@ -15,13 +15,22 @@ Orbiter.prototype.update = function() {
   this.y = this.controller.y + this.r * Math.sin(this.theta);
 };
 
-Orbiter.prototype.shoot = function(projectiles) {
-  var dx = Math.abs(mouseX - this.x);
-  var dy = Math.abs(mouseY - this.y);
+Orbiter.prototype.shoot = function(projectiles, target) {
+  var s = 5;
+  if (target === undefined) {
+    target = {
+      x: mouseX,
+      y: mouseY
+    };
+  } else {
+    s = 10;
+  }
+  var dx = Math.abs(target.x - this.x);
+  var dy = Math.abs(target.y - this.y);
   var vx, vy;
   if (dx > dy) {
     vy = 0;
-    if (mouseX > this.x) {
+    if (target.x > this.x) {
       vx = 10;
     } else {
       vx = -10;
@@ -39,13 +48,17 @@ Orbiter.prototype.shoot = function(projectiles) {
     y: this.y,
     x_speed: vx,
     y_speed: vy,
-    size: 5,
+    size: s,
     color: 'red'
   });
 };
 
 Orbiter.prototype.draw = function() {
   noStroke();
-  fill(Math.random()*255, Math.random()*255, Math.random()*255);
+  if (this.controller.type == 'player') {
+    fill(Math.random()*255, Math.random()*255, Math.random()*255);
+  } else if (this.controller.type == 'enemy') {
+    fill(255 - 155 * Math.sin(timer * Math.PI / 90), 0, 0);
+  }
   ellipse(this.x, this.y, this.size);
 };

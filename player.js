@@ -11,6 +11,7 @@ function Player() {
   this.pickupradius = 50;
   this.max_orbiters = 6;
   this.alive = true;
+  this.type = 'player';
 }
 
 Player.prototype.setup = function() {
@@ -27,28 +28,21 @@ Player.prototype.update = function() {
   if (keyIsDown(W_KEY) && this.y - buffer > 0) {
     this.y -= this.speed;
   }
-
   if (keyIsDown(S_KEY) && this.y + buffer < SCREEN_HEIGHT) {
     this.y += this.speed;
-  }
-  
+  } 
   if (keyIsDown(D_KEY) && this.x + buffer < SCREEN_WIDTH) {
     this.x += this.speed;
   }
-  
   if (keyIsDown(A_KEY) && this.x - buffer > 0) {
     this.x -= this.speed;
   }
-  
   if (player.cooldown > 0) {
     this.cooldown--;
   }
-
-  if (mouseIsPressed && this.cooldown <= 0) {
+  if (this.cooldown <= 0) {
     this.shoot();
   }
-
- 
   for (var i=0; i<this.orbiters.length; ++i) {
     this.orbiters[i].update();
   }

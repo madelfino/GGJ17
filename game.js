@@ -25,6 +25,7 @@ var powerups = [];
 var game_over = false;
 var timer = 0;
 var show_instructions = true;
+var boss = new Boss;
 
 function distance(x1, y1, x2, y2) {
   var dx = x2 - x1;
@@ -40,10 +41,14 @@ function collides(obj1, obj2) {
 function startWave() {
   enemies_remaining = wave * 10;
   display_wave = false;
+  if (wave % 1 == 0) {
+    boss.reset();
+  }
 }
 
 function reset() {
   player = new Player();
+  boss.die();
   player.setup();
   wave = 0;
   enemies_remaining = 0;
@@ -100,12 +105,20 @@ function setup() {
   toggleAudio(cnv);
 
   bg_music.loop();
+
+  window.onblur = function() {
+    bg_music.pause();
+  };
+
+  window.onfocus = function() {
+    bg_music.loop();
+  };
 }
 
 function draw() {
  
   timer++;
-  background(100 + 55 * Math.sin(timer * Math.PI / 90));
+  background(60 + 20 * Math.sin(timer * Math.PI / 90));
 
   // map mouseY to modulator freq between a maximum and minimum frequency
   var modFreq = map(mouseY, height, 0, modMinFreq, modMaxFreq);
@@ -235,6 +248,11 @@ function draw() {
     player.update();
     player.draw();
   }
+
+  if (boss.alive) {
+    boss.update();
+    boss.draw();
+  }
   
   for (var i = player.projectiles.length - 1; i >= 0; --i) {
     proj = player.projectiles[i];
@@ -275,4 +293,8 @@ function toggleAudio(cnv) {
   cnv.mouseOut(function() {
     carrier.amp(0.0, 1.0);
   });
+}
+
+function degToRadians(angle) {
+  return angle * Math.PI / 180;
 }
