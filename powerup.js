@@ -1,6 +1,14 @@
+var powerup_types = [
+  'speed',
+  'align',
+  'radial',
+  'shield'
+];
+
 function Powerup(info) {
   this.x = info.x;
   this.y = info.y;
+  this.type = powerup_types[Math.floor(Math.random() * powerup_types.length)];
   this.size = 20;
   this.alive = true;
   this.ttl = 300;
