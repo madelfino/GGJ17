@@ -128,6 +128,8 @@ Player.prototype.draw = function() {
       msg = 'Prismatic Alignment';
     } else if (type == 'radial') {
       msg = 'I am become death';
+    } else if (type == 'line') {
+      msg = 'Chromatic Alignment';
     }
     text(msg, this.x - this.pickupradius/2, this.y - this.pickupradius);
   }
@@ -192,6 +194,13 @@ Player.prototype.powerup = function(type) {
       } 
     } else if (type == 'shield') {
       this.powerup_cooldown = 600;
+    } else if (type == 'line') {
+      var s = Math.PI / 90 + Math.random() * Math.PI / 45;
+      for (var i=0; i<this.orbiters.length; i++) {
+        this.orbiters[i].r = this.pickupradius - 10 + 20 * i;
+        this.orbiters[i].speed = s;
+        this.orbiters[i].theta = 0;
+      } 
     }
   }
 }

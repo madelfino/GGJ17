@@ -2,7 +2,8 @@ var powerup_types = [
   'speed',
   'align',
   'radial',
-  'shield'
+  'shield',
+  'line'
 ];
 
 function Powerup(info) {
