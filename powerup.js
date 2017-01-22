@@ -37,5 +37,5 @@ Powerup.prototype.update = function() {
 Powerup.prototype.draw = function() {
   fill(Math.random() * 255, Math.random() * 255, Math.random() * 255);
   noStroke();
-  ellipse(this.x, this.y, this.size);
+  ellipse(this.x, this.y, fluctuate(this.size, 1.5, 4));
 }

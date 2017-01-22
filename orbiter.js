@@ -65,5 +65,5 @@ Orbiter.prototype.draw = function() {
   } else if (this.controller.type == 'enemy') {
     fill(255 - 155 * Math.sin(timer * Math.PI / 90), 0, 0);
   }
-  ellipse(this.x, this.y, this.size);
+  ellipse(this.x, this.y, (this.size - 1) + 2 * Math.sin(timer * Math.PI / 90));
 };

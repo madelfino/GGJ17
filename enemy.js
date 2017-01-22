@@ -41,7 +41,7 @@ Enemy.prototype.update = function() {
 Enemy.prototype.draw = function() {
   noStroke();
   fill(155 - 55 * Math.sin(timer * Math.PI/90), 0, 0);
-  ellipse(this.x, this.y, this.size);
+  ellipse(this.x, this.y, fluctuate(this.size, 2, 5));
   if (this.hp == this.max_hp) {
     fill('green');
   } else if (this.hp / this.max_hp > .5) {

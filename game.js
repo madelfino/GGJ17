@@ -348,3 +348,7 @@ function toggleAudio(cnv) {
 function degToRadians(angle) {
   return angle * Math.PI / 180;
 }
+
+function fluctuate(mean, variance, spd) {
+  return mean - variance + 2 * variance * Math.sin(timer * spd * Math.PI / 180);
+}
