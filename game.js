@@ -26,6 +26,7 @@ var game_over = false;
 var timer = 0;
 var show_instructions = true;
 var boss = new Boss;
+var evil_awakened = false;
 
 function distance(x1, y1, x2, y2) {
   var dx = x2 - x1;
@@ -41,7 +42,8 @@ function collides(obj1, obj2) {
 function startWave() {
   enemies_remaining = wave * 10;
   display_wave = false;
-  if (wave % 1 == 0) {
+  if (wave % 10 == 0) {
+    enemies_remaining /= 10;
     boss.reset();
   }
 }
@@ -58,6 +60,7 @@ function reset() {
   display_wave = false;
   game_over = false;
   timer = 0;
+  show_instructions = true;
 }
 
 var carrier; // this is the oscillator we will hear
@@ -118,7 +121,7 @@ function setup() {
 function draw() {
  
   timer++;
-  background(60 + 20 * Math.sin(timer * Math.PI / 90));
+  background(40 + 20 * Math.sin(timer * Math.PI / 90));
 
   // map mouseY to modulator freq between a maximum and minimum frequency
   var modFreq = map(mouseY, height, 0, modMinFreq, modMaxFreq);
@@ -149,14 +152,23 @@ function draw() {
     textSize(32);
     textAlign(CENTER);
     strokeWeight(2);
-    text("WASD Keys to Move\nMouse to Aim/Shoot", SCREEN_WIDTH / 2, SCREEN_HEIGHT / 4);  
-  }
-  if (timer > 500) {
+    if (evil_awakened) {
+      text("EVIL HAS AWAKENED", SCREEN_WIDTH / 2, SCREEN_HEIGHT / 4);  
+    } else {
+      text("WASD Keys to Move\nMouse to Aim/Shoot", SCREEN_WIDTH / 2, SCREEN_HEIGHT / 4);  
+    }
+    if (timer > 500) {
       show_instructions = false;
+      evil_awakened = false;
+    }
   }
 
+  if (player.score >= 666 && !evil_awakened) {
+    boss.reset();
+    evil_awakened = true;
+  }
 
-  if (enemies_remaining <= 0 && enemies.length == 0 && !display_wave) {
+  if (enemies_remaining <= 0 && enemies.length == 0 && !display_wave && !boss.alive) {
     wave++;
     display_wave = true;
     setTimeout(startWave, 3000);
@@ -201,8 +213,27 @@ function draw() {
       enemy_explosion.setVolume(0.2);
       enemy_explosion.play();
     } else {
+      if (boss.alive) {
+        if (enemies[i].x < boss.x) {
+          enemies[i].x += .5;
+        }
+        if (enemies[i].x > boss.x) {
+          enemies[i].x -= .5;
+        }
+        if (enemies[i].y < boss.y) {
+          enemies[i].y += .5;
+        }
+        if (enemies[i].y > boss.y) {
+          enemies[i].y -= .5;
+        }
+      }
       if (Math.random() * 200 < enemies[i].fire_rate) {
         enemies[i].shoot(enemy_projectiles);
+      }
+      if (Math.abs(enemies[i].x - boss.x) < 1 && Math.abs(enemies[i].y - boss.y) < 1) {
+        enemies.splice(i, 1);
+        boss.radialShoot(36);
+        boss.addOrbiter();
       }
     }
   }
@@ -252,6 +283,9 @@ function draw() {
   if (boss.alive) {
     boss.update();
     boss.draw();
+    if (Math.random() * 500 < spawn_chance) {
+      powerups.push(new Powerup({x: Math.random() * SCREEN_WIDTH, y: Math.random() * SCREEN_HEIGHT}));
+    }
   }
   
   for (var i = player.projectiles.length - 1; i >= 0; --i) {
@@ -269,6 +303,21 @@ function draw() {
         enemies[j].hit();
         player.projectiles.splice(i, 1);
         player.score++;
+      }
+    }
+    if (boss.alive && boss.intro_over) {
+      for (var j=0; j<boss.orbiters.length; ++j) {
+        if (collides(proj, boss.orbiters[j])) {
+          player.projectiles.splice(i, 1);
+          boss.orbiters[j].hp--;
+          enemy_explosion.play();
+        }
+      }
+      if (boss.last_resort && collides(proj, boss)) {
+        boss.hp--;
+        player.projectiles.splice(i, 1);
+        boss.radialShoot(36);
+        enemy_explosion.play();
       }
     }
   }

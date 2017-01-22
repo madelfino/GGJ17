@@ -18,7 +18,7 @@ Powerup.prototype.update = function() {
   if (this.x > player.x) {
     this.x -= this.speed;
   }
-  if (this.y < player.x) {
+  if (this.y < player.y) {
     this.y += this.speed;
   }
   if (this.y > player.y) {

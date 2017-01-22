@@ -7,12 +7,17 @@ function Orbiter(controller) {
   this.x = controller.x;
   this.y = controller.y + this.r;
   this.size = 20;
+  this.alive = true;
+  this.hp = 20;
 }
 
 Orbiter.prototype.update = function() {
   this.theta += this.speed;
   this.x = this.controller.x + this.r * Math.cos(this.theta);
   this.y = this.controller.y + this.r * Math.sin(this.theta);
+  if (this.hp <= 0) {
+    this.alive = false;
+  }
 };
 
 Orbiter.prototype.shoot = function(projectiles, target) {
